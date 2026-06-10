@@ -1,0 +1,24 @@
+tasks:
+  installDeps:
+    name: Install dependencies
+    description: Install the FastAPI app and its dependencies in editable mode.
+    command: |
+      python -m pip install -e .
+    triggeredBy:
+      - manual
+      - postDevcontainerStart
+      - prebuild
+
+services:
+  fastapi:
+    name: FastAPI
+    description: Run the FastAPI development server.
+    triggeredBy:
+      - manual
+      - postEnvironmentStart
+    commands:
+      start: |
+        ona environment port open 8000 --dont-wait --admission creator_only --name "FastAPI"
+        fastapi dev app/main.py --host 0.0.0.0 --port 8000
+      ready: |
+        curl -sf http://localhost:8000/ > /dev/null
