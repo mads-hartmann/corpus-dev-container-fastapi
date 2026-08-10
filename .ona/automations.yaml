@@ -1,0 +1,23 @@
+tasks:
+  install-dependencies:
+    name: Install dependencies
+    command: pip install -e .
+    triggeredBy:
+      - manual
+      - postDevcontainerStart
+      - prebuild
+
+services:
+  fastapi:
+    name: FastAPI
+    description: Run the FastAPI development server
+    commands:
+      start: |
+        fastapi dev app/main.py --host 0.0.0.0 &
+        server_pid=$!
+        gitpod environment port open 8000 --admission creator_only --name FastAPI --protocol http
+        wait "$server_pid"
+      ready: curl --fail --silent http://localhost:8000/ > /dev/null
+    triggeredBy:
+      - manual
+      - postEnvironmentStart
