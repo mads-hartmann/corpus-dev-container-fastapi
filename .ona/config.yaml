@@ -1,0 +1,22 @@
+services:
+  api:
+    name: FastAPI
+    description: Development FastAPI server
+    triggeredBy:
+      - manual
+      - postEnvironmentStart
+    commands:
+      start: |
+        ona environment port open 8000 --admission creator_only --name "FastAPI"
+        fastapi dev app/main.py --host 0.0.0.0 --port 8000
+      ready: curl -fsS http://localhost:8000/
+
+tasks:
+  install-dependencies:
+    name: Install dependencies
+    description: Install the application in editable mode
+    triggeredBy:
+      - manual
+      - postDevcontainerStart
+      - prebuild
+    command: python -m pip install --editable .
