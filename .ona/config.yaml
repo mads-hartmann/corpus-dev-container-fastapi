@@ -1,0 +1,27 @@
+tasks:
+  install:
+    name: Install dependencies
+    command: python -m pip install -e .
+    triggeredBy:
+      - manual
+      - postDevcontainerStart
+      - prebuild
+  build:
+    name: Build application
+    command: python -m compileall app
+    dependsOn:
+      - install
+    triggeredBy:
+      - manual
+
+services:
+  app:
+    name: FastAPI
+    commands:
+      start: |
+        ona environment port open 8000 --admission creator_only --name "FastAPI"
+        fastapi dev app/main.py --host 0.0.0.0 --port 8000
+      ready: curl -fsS http://localhost:8000/
+    triggeredBy:
+      - manual
+      - postEnvironmentStart
