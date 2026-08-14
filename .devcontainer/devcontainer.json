@@ -1,0 +1,4 @@
+{
+  "name": "corpus-dev-container-fastapi",
+  "image": "mcr.microsoft.com/devcontainers/python:3.11"
+}
